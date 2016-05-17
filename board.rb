@@ -7,19 +7,38 @@ class Board
     @grid = Array.new(8) {Array.new(8, nil)}
     populate
   end
-
+#board, pos, kingdom
   def populate
-    @grid[0].each_index do |column_idx|
-      @grid[0][column_idx] = Piece.new
+    self[[0,0]] = Rook.new(self, [0,0], :blue)
+    self[[0,7]] = Rook.new(self, [0,7], :blue)
+    self[[0,1]] = Knight.new(self, [0,1], :blue)
+    self[[0,6]] = Knight.new(self, [0,6], :blue)
+    self[[0,2]] = Bishop.new(self, [0,2], :blue)
+    self[[0,5]] = Bishop.new(self, [0,5], :blue)
+    self[[0,3]] = Queen.new(self, [0,3], :blue)
+    self[[0,4]] = King.new(self, [0,4], :blue)
+
+    @grid[1].each_index do |col_idx|
+      @grid[1][col_idx] = Pawn.new(self, [1, col_idx], :blue)
     end
-    @grid[1].each_index do |column_idx|
-      @grid[1][column_idx] = Piece.new
+
+    self[[7,0]] = Rook.new(self, [7,0], :yellow)
+    self[[7,7]] = Rook.new(self, [7,7], :yellow)
+    self[[7,1]] = Knight.new(self, [7,1], :yellow)
+    self[[7,6]] = Knight.new(self, [7,6], :yellow)
+    self[[7,2]] = Bishop.new(self, [7,2], :yellow)
+    self[[7,5]] = Bishop.new(self, [7,5], :yellow)
+    self[[7,4]] = Queen.new(self, [7,4], :yellow)
+    self[[7,3]] = King.new(self, [7,3], :yellow)
+
+    @grid[6].each_index do |col_idx|
+      @grid[6][col_idx] = Pawn.new(self, [6, col_idx], :yellow)
     end
-    @grid[6].each_index do |column_idx|
-      @grid[6][column_idx] = Piece.new
-    end
-    @grid[7].each_index do |column_idx|
-      @grid[7][column_idx] = Piece.new
+
+    (2..5).each do |row_idx|
+      (0..7).each do |col_idx|
+        self[[row_idx, col_idx]] = NullPiece.instance
+      end
     end
   end
 
@@ -42,6 +61,26 @@ class Board
     x, y = pos
     @grid[x][y] = piece
   end
-end
 
-p Board.new.grid
+  def in_bounds?(pos)
+    pos.all? {|x| x.between?(0, 7)}
+  end
+
+  def in_check?(kingdom)
+    king_pos = find_king_pos(kingdom)
+    self.flatten.each do |piece|
+      if piece.kingdom != kingdom && !piece.is_a?(NullPiece)
+    end
+  end
+
+  def find_king_pos(kingdom)
+    self.flatten.each do |piece|
+      if piece.is_a?(King) && piece.kingdom == kingdom
+        return piece.pos
+      end
+    end
+  end
+
+  def checkmate?
+  end
+end
