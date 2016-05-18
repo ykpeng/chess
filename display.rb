@@ -4,11 +4,12 @@ require_relative "cursorable"
 
 class Display
   include Cursorable
+  attr_reader :selected
 
 
   def initialize(board)
     @board = board
-    @cursor_pos = [0, 0]
+    @cursor_pos = [6, 3]
     @selected = false
   end
 
@@ -52,7 +53,7 @@ class Display
   end
 end
 
-b = Board.new
-
-a = Display.new(b)
-a.move
+# b = Board.new
+#
+# a = Display.new(b)
+# p a.move
